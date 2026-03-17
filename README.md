@@ -1,72 +1,75 @@
-# IDS 568 Milestone 4
+# IDS568 Milestone 4 — Distributed Feature Engineering
 
-## Author
-Fatima Kaneez
+## Overview
+This project implements a PySpark pipeline to compute feature transformations on CSV datasets. The main output is a new column `value_sum` = `value1 + value2`. The pipeline is designed for distributed feature engineering, but it runs on a single-node VM for this submission.
 
----
+## Setup
+Clone the repository, create a virtual environment, and install dependencies:
 
-## Project Overview
-This project implements a distributed feature engineering pipeline using PySpark and compares it with a local Python implementation. The objective is to evaluate scalability, performance, and trade-offs between local and distributed data processing approaches.
-
----
-
-## Project Structure
-- generate_data.py → Generates synthetic dataset with reproducible randomness
-- pipeline_local.py → Local (single-machine) pipeline
-- pipeline.py → Distributed PySpark pipeline
-- REPORT.md → Performance and analysis
-
----
-
-## Setup Instructions
-
-### Create Virtual Environment
+```bash
+git clone https://github.com/kaneezfatima11/ids568-milestone4-fatim.git
+cd ids568-milestone4-fatim
 python3 -m venv venv
 source venv/bin/activate
+pip install -r requirements.txt
+```
 
-### Install Dependencies
-pip install pyspark
+## Data Generation
+Generate a reproducible dataset with seeded randomness:
 
-### Set Java
-export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+```bash
+python generate_data.py --rows 1000 --seed 42 --output test_data/
+```
 
----
+## Pipeline Execution
 
-## Run Instructions
+### Single-node Spark
+Run the main PySpark pipeline:
 
-### Generate Data
-python generate_data.py --rows 100000 --output data/ --seed 42
+```bash
+time python pipeline.py --input test_data/ --output spark_output/
+```
 
-### Local Pipeline
-python pipeline_local.py --input data/ --output local_output/
+### Local Python pipeline
+Run the local Python version for comparison:
 
-### Distributed Pipeline
-python pipeline.py --input data/ --output spark_output/
+```bash
+time python pipeline_local.py --input test_data/ --output local_output/
+```
 
----
+## Performance Summary — Local vs Spark
+
+| Dataset   | Local (Python) | Spark (PySpark) |
+|-----------|----------------|----------------|
+| 100K      | 0.3s           | 12s            |
+| 1M        | 2.8s           | 15s            |
+| 5M        | 13.7s          | 24s            |
+
+## Performance Summary — Executor Info
+
+| Dataset       | Executors | Default Parallelism | Runtime (real) |
+|---------------|-----------|-------------------|----------------|
+| large_data    | 1         | 4                 | 0m11.580s      |
+
+**Notes:**
+
+- Runtime measured using `time` command in terminal.
+- Shuffle/stage metrics are **not available** on single-node VM.
+- These results illustrate scaling behavior, even though Spark is limited by single-node setup.
+
+## Notes
+- Seeded randomness ensures reproducible results.
+- Output CSV contains the correct `value_sum` column, verified by comparing repeated runs:
+
+```bash
+diff run1/data.csv run2/data.csv
+```
+
+## Output
+Processed CSV files are saved in the output folders:
+
+- `spark_output/` for distributed PySpark pipeline  
+- `local_output/` for local Python pipeline
 
 ## Reproducibility
-- Uses fixed random seed
-- Same input → same output
-
----
-
-## Performance Summary
-
-| Dataset | Local | Spark |
-|--------|------|------|
-| 100K   | 0.3s | 12s  |
-| 1M     | 2.8s | 15s  |
-| 5M     | 13.7s| 23.8s|
-
----
-
-## Analysis
-- Local faster for small data
-- Spark has overhead
-- Distributed helps at scale
-
----
-
-## Conclusion
-Distributed systems are useful for large-scale processing but introduce overhead for smaller datasets.
+Anyone can follow these instructions to reproduce the results exactly, including generating the same datasets and verifying outputs.
