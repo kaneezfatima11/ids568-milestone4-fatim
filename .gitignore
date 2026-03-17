@@ -1,0 +1,21 @@
+venv/
+__pycache__/
+*.pyc
+
+# Data folders
+test_data/
+large_data/
+bigger_data/
+huge_data/
+
+# Output folders
+test_output/
+local_output/
+local_big/
+local_huge/
+spark_output/
+spark_big/
+spark_huge/
+
+run1/
+run2/
