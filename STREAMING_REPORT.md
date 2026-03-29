@@ -52,7 +52,11 @@ The consumer maintains state across events within each window:
 | High (10K msg/s) | 0.019ms | 0.036ms | 0.044ms | 6,027.8 msg/s |
 | Breaking point | ~0.019ms | ~0.036ms | ~0.044ms | ~6,027 msg/s |
 
+![Throughput Comparison](charts/throughput_comparison.png)
 
+![Latency Percentiles](charts/latency_percentiles.png)
+
+![Queue Depth Burst](charts/queue_depth_burst.png)
 
 ### 4.2 Queue Depth Under Load
 | Load Level | Avg Queue Depth | Max Queue Depth | Events Dropped |

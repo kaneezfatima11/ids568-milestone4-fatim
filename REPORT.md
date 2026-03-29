@@ -46,6 +46,9 @@ The pipeline computes 5 feature groups:
 | Shuffle Volume | N/A | ~450 MB |
 | Worker Utilization | N/A | ~85% |
 
+![Runtime Comparison](charts/runtime_comparison.png)
+
+![Partition Analysis](charts/partition_analysis.png)
 
 ### 4.2 How to Reproduce Results
 ```bash
