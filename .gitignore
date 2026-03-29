@@ -1,0 +1,10 @@
+data/
+test_data/
+output_local/
+output_dist/
+test_output/
+run1/
+run2/
+__pycache__/
+*.pyc
+.DS_Store
